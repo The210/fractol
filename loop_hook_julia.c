@@ -6,7 +6,7 @@
 /*   By: ybouzgao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 17:06:18 by ybouzgao          #+#    #+#             */
-/*   Updated: 2018/04/05 17:25:56 by ybouzgao         ###   ########.fr       */
+/*   Updated: 2018/04/13 15:55:26 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int		ft_loop_julia(t_fract *fract)
 	}
 	mlx_destroy_image(fract->mlx, fract->img);
 	fract->img = mlx_new_image(fract->mlx, 1000, 1000);
-	fract->img_string = (int*)mlx_get_data_addr(fract->img, &(fract->bpp), &(fract->s_l), &(fract->endian));
-
+	fract->img_string = (int*)mlx_get_data_addr(fract->img, 
+	&(fract->bpp), &(fract->s_l), &(fract->endian));
 	mlx_clear_window(fract->mlx, fract->win);
 	julia(*fract);
 	return (0);

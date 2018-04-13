@@ -6,11 +6,11 @@
 /*   By: ybouzgao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/31 17:17:22 by ybouzgao          #+#    #+#             */
-/*   Updated: 2018/04/13 12:38:20 by dhorvill         ###   ########.fr       */
+/*   Updated: 2018/04/13 16:09:54 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractal.h"
+#include "fractol.h"
 #include <stdio.h>
 
 void	ft_move_to_corner(t_fract *fract, int x, int y, int a)
@@ -85,7 +85,7 @@ int		change_julia(int x, int y, t_fract *fract)
 		fract->c_i = fract->JY1 + y / fract->zoom_y;
 	}
 		if (fract->choice1 == 2)
-			julia(*fract);
+			julia_win1(*fract);
 	return (0);
 }
 
@@ -108,10 +108,10 @@ int		ft_zoom_mouse(int button, int x, int y, t_fract *fract)
 	if (button == 1 && fract->choice1 == 2)
 		fract->julia_change = fract->julia_change == 1 ? 0 : 1;
 	if (fract->choice1 == 1)
-		draw_mandelbrot(*fract);
+		draw_mandelbrot_win1(*fract);
 	else if (fract->choice1 == 2)
-		julia(*fract);
+		julia_win1(*fract);
 	else if (fract->choice1 == 3)
-		draw_burning_ship(*fract);
+		draw_burning_ship_win1(*fract);
 	return (0);
 }

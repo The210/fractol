@@ -6,11 +6,12 @@
 /*   By: ybouzgao <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/31 18:16:53 by ybouzgao          #+#    #+#             */
-/*   Updated: 2018/04/10 14:45:06 by dhorvill         ###   ########.fr       */
+/*   Updated: 2018/04/13 16:24:45 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractal.h"
+#include "fractol.h"
+
 void	*julia1(void *void_fract)
 {
 	float tempre;
@@ -54,31 +55,35 @@ void	*julia1(void *void_fract)
 	return NULL;
 }
 
-void	julia(t_fract fract)
+void	julia_win1(t_fract fract)
 {
 	pthread_t tid1;
 	pthread_t tid2;
 	pthread_t tid3;
 	pthread_t tid4;
+	t_fract	fract1;
 	t_fract fract2;
 	t_fract fract3;
 	t_fract fract4;
+	fract1 = fract;
 	fract2 = fract;
 	fract3 = fract;
 	fract4 = fract;
 
-	fract.thread = 600;
+	fract1.thread = 600;
 	fract2.thread = 400;
 	fract3.thread = 200;
 	fract4.thread = 0;
 
+	fract1.img = mlx_new_image(fract.mlx, 800, 200);
+	fract1.img_string = (int*)mlx_get_data_addr(fract1.img, &(fract1.bpp), &(fract1.s_l), &(fract1.endian));
 	fract2.img = mlx_new_image(fract.mlx, 800, 200);
 	fract2.img_string = (int*)mlx_get_data_addr(fract2.img, &(fract2.bpp), &(fract2.s_l), &(fract2.endian));
 	fract3.img = mlx_new_image(fract.mlx, 800, 200);
 	fract3.img_string = (int*)mlx_get_data_addr(fract3.img, &(fract3.bpp), &(fract3.s_l), &(fract3.endian));
 	fract4.img = mlx_new_image(fract.mlx, 800, 200);
 	fract4.img_string = (int*)mlx_get_data_addr(fract4.img, &(fract4.bpp), &(fract4.s_l), &(fract4.endian));
-	pthread_create(&tid1, NULL, julia1, &fract);
+	pthread_create(&tid1, NULL, julia1, &fract1);
 	pthread_create(&tid2, NULL, julia1, &fract2);
 	pthread_create(&tid3, NULL, julia1, &fract3);
 	pthread_create(&tid4, NULL, julia1, &fract4);
@@ -86,8 +91,50 @@ void	julia(t_fract fract)
 	pthread_join(tid2, NULL);
 	pthread_join(tid3, NULL);
 	pthread_join(tid4, NULL);
-	mlx_put_image_to_window(fract.mlx, fract.win, fract.img, 0, 0);
+	mlx_put_image_to_window(fract.mlx, fract.win, fract1.img, 0, 0);
 	mlx_put_image_to_window(fract.mlx, fract.win, fract2.img, 0, 200);
 	mlx_put_image_to_window(fract.mlx, fract.win, fract3.img, 0, 400);
 	mlx_put_image_to_window(fract.mlx, fract.win, fract4.img, 0, 600);
+}
+
+void	julia_win2(t_fract fract)
+{
+	pthread_t tid1;
+	pthread_t tid2;
+	pthread_t tid3;
+	pthread_t tid4;
+	t_fract	fract1;
+	t_fract fract2;
+	t_fract fract3;
+	t_fract fract4;
+	fract1 = fract;
+	fract2 = fract;
+	fract3 = fract;
+	fract4 = fract;
+
+	fract1.thread = 600;
+	fract2.thread = 400;
+	fract3.thread = 200;
+	fract4.thread = 0;
+
+	fract1.img = mlx_new_image(fract.mlx, 800, 200);
+	fract1.img_string = (int*)mlx_get_data_addr(fract1.img, &(fract1.bpp), &(fract1.s_l), &(fract1.endian));
+	fract2.img = mlx_new_image(fract.mlx, 800, 200);
+	fract2.img_string = (int*)mlx_get_data_addr(fract2.img, &(fract2.bpp), &(fract2.s_l), &(fract2.endian));
+	fract3.img = mlx_new_image(fract.mlx, 800, 200);
+	fract3.img_string = (int*)mlx_get_data_addr(fract3.img, &(fract3.bpp), &(fract3.s_l), &(fract3.endian));
+	fract4.img = mlx_new_image(fract.mlx, 800, 200);
+	fract4.img_string = (int*)mlx_get_data_addr(fract4.img, &(fract4.bpp), &(fract4.s_l), &(fract4.endian));
+	pthread_create(&tid1, NULL, julia1, &fract1);
+	pthread_create(&tid2, NULL, julia1, &fract2);
+	pthread_create(&tid3, NULL, julia1, &fract3);
+	pthread_create(&tid4, NULL, julia1, &fract4);
+	pthread_join(tid1, NULL);
+	pthread_join(tid2, NULL);
+	pthread_join(tid3, NULL);
+	pthread_join(tid4, NULL);
+	mlx_put_image_to_window(fract.mlx, fract.win2, fract1.img, 0, 0);
+	mlx_put_image_to_window(fract.mlx, fract.win2, fract2.img, 0, 200);
+	mlx_put_image_to_window(fract.mlx, fract.win2, fract3.img, 0, 400);
+	mlx_put_image_to_window(fract.mlx, fract.win2, fract4.img, 0, 600);
 }
