@@ -1,87 +1,87 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   julia.c                                            :+:      :+:    :+:   */
+/*   burning_ship.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybouzgao <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/31 18:16:53 by ybouzgao          #+#    #+#             */
-/*   Updated: 2018/04/10 14:45:06 by dhorvill         ###   ########.fr       */
+/*   Created: 2018/04/10 16:21:41 by dhorvill          #+#    #+#             */
+/*   Updated: 2018/04/10 16:55:36 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractal.h"
-void	*julia1(void *void_fract)
+
+void	*burning_ship1(void	*void_fract)
 {
-	float tempre;
-	float tempim;
 	int i;
 	int j;
 	t_fract *fract;
 
 	fract = (t_fract*)void_fract;
 	j = 599 - fract->thread;
-	fract->zoom_x = fract->zoom / (fract->JX2 - fract->JX1);
-	fract->zoom_y = fract->zoom / (fract->JY2 - fract->JY1);
-	while(++j < 800 - fract->thread)
+	fract->zoom_x = fract->zoom / (fract->BX2 - fract->BX1);
+	fract->zoom_y = fract->zoom / (fract->BY2 - fract->BY1);
+	while (++j < 800 - fract->thread)
 	{
-		fract->nz_r = j / fract->zoom_y + fract->JY1;
 		i = -1;
-		while(++i < 800)
+		fract->c_i = j / fract->zoom_y + fract->BY1;
+		while (++i < 800)
 		{
-			fract->z_r = i / fract->zoom_x + fract->JX1;
-			fract->z_i = fract->nz_r;
+			fract->c_r = i / fract->zoom_x + fract->BX1;
+			fract->z_r = 0;
+			fract->z_i = 0;
+			fract->oz_r = 0;
+			fract->oz_i = 0;
 			fract->k = 0;
-			while(fract->k <= fract->iterations)
+			while (fract->oz_r + fract->oz_i <= 4 && fract->k++ < fract->iterations)
 			{
-				tempre = fract->z_r;
-				tempim = fract->z_i;
-				fract->z_r = tempre * tempre - tempim * tempim + fract->c_r;
-				fract->z_i = 2 * tempre * tempim + fract->c_i;
-				fract->k++;
-				if(fract->z_r * fract->z_r + fract->z_i * fract->z_i > 4)
-					break ;
+				fract->tmp = fract->oz_r - fract->oz_i + fract->c_r;
+				fract->z_r = fract->z_r + fract->z_r;
+				fract->z_i = fabs(fract->z_r * fract->z_i + fract->c_i);
+				fract->z_r = fabs(fract->tmp);
+				fract->oz_r = fabs(fract->z_r * fract->z_r);
+				fract->oz_i = fabs(fract->z_i * fract->z_i);
 			}
 			if (fract->k >= fract->iterations)
 				fract->img_string[(j - 600 + fract->thread) * 800 + i] = 0;
 			else if (fract->k * 100 / fract->iterations < 50)
 				fract->img_string[(j - 600 + fract->thread) * 800 + i] = draw_color(*fract, 0, fract->k);
 			else
-				fract->img_string[(j - 600 + fract->thread) * 800 + i] = draw_color(*fract, 1, fract->k);
-
+				fract->img_string[(j - 600 + fract->thread)* 800 + i] = draw_color(*fract, 1, fract->k);
 		}
 	}
 	return NULL;
 }
 
-void	julia(t_fract fract)
+void	draw_burning_ship(t_fract fract)
 {
-	pthread_t tid1;
-	pthread_t tid2;
-	pthread_t tid3;
-	pthread_t tid4;
 	t_fract fract2;
 	t_fract fract3;
 	t_fract fract4;
+
 	fract2 = fract;
 	fract3 = fract;
 	fract4 = fract;
-
 	fract.thread = 600;
 	fract2.thread = 400;
 	fract3.thread = 200;
 	fract4.thread = 0;
-
 	fract2.img = mlx_new_image(fract.mlx, 800, 200);
 	fract2.img_string = (int*)mlx_get_data_addr(fract2.img, &(fract2.bpp), &(fract2.s_l), &(fract2.endian));
 	fract3.img = mlx_new_image(fract.mlx, 800, 200);
 	fract3.img_string = (int*)mlx_get_data_addr(fract3.img, &(fract3.bpp), &(fract3.s_l), &(fract3.endian));
 	fract4.img = mlx_new_image(fract.mlx, 800, 200);
 	fract4.img_string = (int*)mlx_get_data_addr(fract4.img, &(fract4.bpp), &(fract4.s_l), &(fract4.endian));
-	pthread_create(&tid1, NULL, julia1, &fract);
-	pthread_create(&tid2, NULL, julia1, &fract2);
-	pthread_create(&tid3, NULL, julia1, &fract3);
-	pthread_create(&tid4, NULL, julia1, &fract4);
+
+	pthread_t tid1;
+	pthread_t tid2;
+	pthread_t tid3;
+	pthread_t tid4;
+	pthread_create(&tid1, NULL, burning_ship1, &fract);
+	pthread_create(&tid2, NULL, burning_ship1, &fract2);
+	pthread_create(&tid3, NULL, burning_ship1, &fract3);
+	pthread_create(&tid4, NULL, burning_ship1, &fract4);
 	pthread_join(tid1, NULL);
 	pthread_join(tid2, NULL);
 	pthread_join(tid3, NULL);
